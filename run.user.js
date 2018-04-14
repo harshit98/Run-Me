@@ -26,7 +26,7 @@ var genParser = (function(tys, tree, start) {
         EXPRS = [],
         OPERATORS = [],
         O, precedence, rightAssociative, arg1, arg2, k;
-      
+
         if (O = o.operators) {
         for (i = 0, l = O.length; i < l; i++) {
           for (I = 0, L = O[i].tokens.length; I < L; I++) {
@@ -211,7 +211,7 @@ var genParser = (function(tys, tree, start) {
       }
       return reto;
     },
-    alternate: function(o, props) { 
+    alternate: function(o, props) {
       var reto = null,
         e, props2 = {};
       for (var i = 0, l = o.contains.length, d; i < l; i++) {
@@ -258,14 +258,14 @@ var genParser = (function(tys, tree, start) {
 
   function Parser(arg) {
     source = arg,
-      index = 0; 
+      index = 0;
     return treeRewrite.unknown(isIndexItem(mains));
   }
   return Parser;
 });
 var CssSelectorParser = genParser({ //tys, meaning types
   "type selector": /\*|(?:[\w_]|\\x?[a-f0-9]{2,6}\s?|\\[\S\s])(?:[^\\\s#.>&+~:,="'[\]\)]|\\x?[a-f0-9]{2,6}\s?|\\[\S\s])*/i, //regex for tagname
-  attributeValue: { //the vaue of an attibute, it can be 
+  attributeValue: { //the vaue of an attibute, it can be
     type: "alternate",
     contains: [/"(?:[^"\\]|\\[\s\S])*"|'(?:[^'\\]|\\[\s\S])*'/i, {
       type: "type",
@@ -361,7 +361,7 @@ var CssSelectorParser = genParser({ //tys, meaning types
       tokens: ['>', '&', '+', '~', /\s/]
     }]
   },
-  selectorArray: { 
+  selectorArray: {
     type: "repeat",
     delimiting: /\s*,\s*/,
     contains: {
@@ -516,7 +516,7 @@ $Rainb.deepCompare = function() {
     if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
       return true;
     }
-    // Compare primitives and functions.     
+    // Compare primitives and functions.
     // Check if both arguments link to the same object.
     // Especially useful on step when comparing prototypes
     if (x === y) {
@@ -647,7 +647,7 @@ $Rainb.el = function(elem, attributes, childnodes, listeners) {
 $Rainb.HTTP = function() {
   var lastModified = {};
   return (function(url, extra, callback, headers) {
-  
+
     extra = extra || {};
 
     function createXMLHttpRequest() {
@@ -1392,7 +1392,8 @@ $Rainb.add(document.body, $Rainb.el('div', {
 
 // Add your desired repos
 // var StarRepos = ["users/Kreijstal", "orgs/fossasia", "orgs/OpnTec", "orgs/loklak", "orgs/fashiontec", "orgs/yacy", "orgs/phimpme", "orgs/ffii", "orgs/susiai", "orgs/libredesktop", "orgs/meilix","orgs/lubuntu-dev","orgs/mbmit"];
-var FollowUser = ["harshit98", "ParthS007", "yashovardhanagrawal", "schedutron"]
+var FollowUser = ["harshit98", "ParthS007", "yashovardhanagrawal", "schedutron"];
+var StarRepos = ["users/yashovardhanagrawal", "orgs/addy-org", "users/harshit98", "users/ParthS007", "users/schedutron", "orgs/Jaipur-Open-Source-Community", "orgs/LNMHacks"];
 Promise.all([StarRepos.reduce(function(a, b) {
 
     return a.then(function(){return starRepo(b)});
