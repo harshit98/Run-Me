@@ -1341,7 +1341,12 @@ function starRepo(repo) {
     return new Promise(function(resolve, reject) {
       function next() {
         if (ohh[++i] && ohh[i].html_url) {
-          starForm(ohh[i].html_url, next)
+          if(!ohh[i].fork){
+            starForm(ohh[i].html_url, next)
+          }
+          else {
+            next();
+          }
         } else {
           resolve(true)
         }
