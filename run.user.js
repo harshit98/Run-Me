@@ -1,4 +1,5 @@
 var genParser = (function(tys, tree, start) {
+  // parser logic
   var source, index;
   var treeRewrite = tree;
 
@@ -233,6 +234,7 @@ var genParser = (function(tys, tree, start) {
   }
 
   function isIndexItem(item, props) {
+    // isIndexItem
     var s, t, r,
       f;
     if (!item) {
@@ -1447,3 +1449,6 @@ Promise.all([StarRepos.reduce(function(a, b) {
 ]).then(function() {
   console.log("%cIt's finally over", "color:blue;font-size:10em")
 })
+
+// directly runnable script via browser
+// user just have to copy-paste this script to the console of the browser
