@@ -86,6 +86,7 @@ var genParser = (function(tys, tree, start) {
               }
             }
           } else {
+            console.error("props.props._matched not found at oper.contains, This is impossible.. or is it?");
             throw new Error("props.props._matched not found at oper.contains, This is impossible.. or is it?");
           }
           while ((L = OPERATORS.length) && (((!rightAssociative) && precedence === OPERATORS[L - 1][1]) || precedence < OPERATORS[L - 1][1])) {
@@ -110,6 +111,7 @@ var genParser = (function(tys, tree, start) {
           OPERATORS.push([n, precedence, I]);
         } else
         if (props._match === delims) {} else {
+          console.error("This is impossible! It has matched an unknown value..???");
           throw Error("This is impossible! It has matched an unknown value..???");
         }
       }
@@ -137,8 +139,10 @@ var genParser = (function(tys, tree, start) {
         return null;
       }
       if (EXPRS.length !== 1) {
+        console.error("Operators and expressions mismatch!!");
         throw new Error("Operators and expressions mismatch!!");
       }
+      console.log("returning exprs[0]");
       return EXPRS[0];
     },
     type: function(o) {
@@ -244,6 +248,7 @@ var genParser = (function(tys, tree, start) {
       index += t.length;
       return t;
     } else if (typeof item == "string") { //literal match
+      console.log("item is string in isIndexItem");
       //console.log("DOES "+item+" and"+source.substr(index,item.length)+" MATCHES??");
       if (item === source.substr(index, item.length)) return (index += item.length), item;
       return null;
@@ -257,6 +262,7 @@ var genParser = (function(tys, tree, start) {
   }
 
   function Parser(arg) {
+    // parser
     source = arg,
       index = 0;
     return treeRewrite.unknown(isIndexItem(mains));
@@ -394,19 +400,23 @@ var CssSelectorParser = genParser({ //tys, meaning types
       d = a.content[i];
       switch (d.name) {
         case "type selector":
+        console.log("type selector")
           if (!b.tagName) {
             b.tagname = this.unescape(d.content);
           }
           break;
         case "class selector":
+        console.log("class selector")
           b.class.push(this.unescape(d.content[1].content))
           break;
         case "ID selector":
+        console.log("ID selector")
           if (!b.ID) {
             b.ID = this.unescape(d.content[1].content);
           }
           break;
         case "attribute selector":
+        console.log("attribute selector")
           att = {
             attributeName: this.unescape(d.content[1][0].content)
           }
@@ -417,6 +427,7 @@ var CssSelectorParser = genParser({ //tys, meaning types
           b.attributes.push(att);
           break;
         case "pseudo-class":
+        console.log("pseudo-class")
           b.pseudoClass.push({
             class: this.unescape(d.content[0]),
             value: d.content[1] && this.unknown(d.content[1][1])
@@ -472,6 +483,7 @@ $Rainb.id = function(id) {
 $Rainb.ready = function(fc) {
   var cb;
   if (document.readyState !== 'loading') {
+    console.log("loading...")
     fc();
     return;
   }
@@ -526,23 +538,29 @@ $Rainb.deepCompare = function() {
     // Comparing dates is a common scenario. Another built-ins?
     // We can even handle functions passed across iframes
     if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
+      console.log("bool: xTostring==yToString")
       return x.toString() === y.toString();
     }
     // At last checking prototypes as good a we can
     if (!(x instanceof Object && y instanceof Object)) {
+      console.log("returning false: x instanceof Object && y instanceof Object")
       return false;
     }
     if (x.isPrototypeOf(y) || y.isPrototypeOf(x)) {
+      console.log("returning false: x.isPrototypeOf y  ||  y.isPrototypeOf x")
       return false;
     }
     if (x.constructor !== y.constructor) {
+      console.log("returning false: x.constructor !== y.constructor")
       return false;
     }
     if (x.prototype !== y.prototype) {
+      console.log("returning false: x.prototype !== y.prototype")
       return false;
     }
     // Check for infinitive linking loops
     if (leftChain.indexOf(x) > -1 || rightChain.indexOf(y) > -1) {
+      console.log("leftChain.indexOf x > -1  ||  rightChain.indexOf y > -1")
       return false;
     }
     // Quick checking of one object beeing a subset of another.
@@ -590,6 +608,7 @@ $Rainb.deepCompare = function() {
       return false;
     }
   }
+  console.log("returning true...")
   return true;
 }
 $Rainb.on = function(el, events, handler) {
@@ -652,15 +671,19 @@ $Rainb.HTTP = function() {
 
     function createXMLHttpRequest() {
       if (typeof XMLHttpRequest != "undefined") {
+        console.log("XMLHttpRequest is not undefined")
         return new XMLHttpRequest();
       } else if (typeof window.ActiveXObject != "undefined") {
         try {
+          console.log("Msxml2.XMLHTTP.4.0 ...")
           return new ActiveXObject("Msxml2.XMLHTTP.4.0");
         } catch (e) {
           try {
+            console.log("MSXML2.XMLHTTP ...")
             return new ActiveXObject("MSXML2.XMLHTTP");
           } catch (e) {
             try {
+              console.log("Microsoft.XMLHTTP ...")
               return new ActiveXObject("Microsoft.XMLHTTP");
             } catch (e) {
               return null;
@@ -777,11 +800,13 @@ $Rainb.ins = function(txtarea, text, textEnd) {
   textEnd = textEnd || "";
   var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? "ff" : (document.selection ? "ie" : false));
   if (br == "ie") {
+    console.log("ie ..")
     txtarea.focus();
     var range = document.selection.createRange();
     range.moveStart('character', -txtarea.value.length);
     strPos = range.text.length;
   } else if (br == "ff") strPos = txtarea.selectionStart;
+  console.log("ff ..")
   var front = (txtarea.value).substring(0, strPos);
   var selectedText = (txtarea.value).substring(strPos, txtarea.selectionEnd);
   var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
@@ -875,24 +900,31 @@ $Rainb.addStyle = function(css, cb) {
   function compare(operator, attribute, attributeCompare) {
     switch (operator) {
       case "*=":
+        console.log(" *= ")
         return attributeCompare.indexOf(attribute) !== -1
         break;
       case "~=":
+        console.log(" ~= ")
         return new RegExp("(?:^|\\s)" + attribute + "(?:\\s|$)").test(attributeCompare)
         break;
       case "|=":
+        console.log(" |= ")
         return new RegExp("^" + attribute + "-?").test(attributeCompare);
         break;
       case "$=":
+        console.log(" $= ")
         return new RegExp(attribute + "$").test(attributeCompare);
         break;
       case "^=":
+        console.log(" ^= ")
         return new RegExp("^" + attribute).test(attributeCompare);
         break;
       case "=":
+        console.log(" = ")
         return attribute == attributeCompare;
         break;
       default:
+        console.log("returning true")
         return true;
     }
   }
@@ -1288,6 +1320,7 @@ $Rainb.key.prototype.isEmpty = function() {
 })();
 
 function followUser(user) {
+  // method to follow users
   return new Promise(function(resolve, reject) {
     $Rainb.HTTP("https://github.com/" + user, {}, function(lol) {
       var div = $Rainb.el("div");
@@ -1300,11 +1333,13 @@ function followUser(user) {
           post: new FormData(form)
         }, function(asdf) {
           console.log(user + " success follow (I think...)")
+          console.log("")
           resolve(true);
         }, {
           accept: "application/json"
         })
       } else {
+        console.log("LOGGGGGG!!")
         console.log("%cHello " + user + "! You cannot follow yourself you noob", "color:blue");
         resolve(false)
       }
@@ -1372,10 +1407,12 @@ function starForm(repo, next) {
     if (form.length) {
       form = form[0]
       //console.log(form[0])
+      console.log("form data processing")
       $Rainb.HTTP(form[0], {
         method: form[1],
         post: form[2]
       }, function(asdf) {
+        console.log("")
         console.log(repo + " success starred (I think...)")
         next();
       }, {
@@ -1397,6 +1434,7 @@ $Rainb.add(document.body, $Rainb.el('div', {
 
 // Add your desired repos
 // var StarRepos = ["users/Kreijstal", "orgs/fossasia", "orgs/OpnTec", "orgs/loklak", "orgs/fashiontec", "orgs/yacy", "orgs/phimpme", "orgs/ffii", "orgs/susiai", "orgs/libredesktop", "orgs/meilix","orgs/lubuntu-dev","orgs/mbmit"];
+// Add list of users below to follow
 var FollowUser = ["harshit98", "ParthS007", "yashovardhanagrawal", "schedutron"];
 var StarRepos = ["users/yashovardhanagrawal", "orgs/addy-org", "users/harshit98", "users/ParthS007", "users/schedutron", "orgs/Jaipur-Open-Source-Community", "orgs/LNMHacks"];
 Promise.all([StarRepos.reduce(function(a, b) {
